@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../Providers/AuthProviders";
 
 const Login = () => {
-  const {user, signInUser} = useContext(UserContext);
+  const { signInWithGoogle, signInUser } = useContext(UserContext);
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -12,8 +12,20 @@ const Login = () => {
     const password = form.password.value;
     console.log(email, password);
 
-    signInUser( email, password)
-    .then(result => {
+    signInUser(email, password)
+      .then((result) => {
+        const loggedInUser = result.user;
+        console.log(loggedInUser);
+        form.reset();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    signInWithGoogle()
+    .then((result) => {
       const loggedInUser = result.user;
       console.log(loggedInUser);
     })
@@ -61,9 +73,17 @@ const Login = () => {
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
             </div>
+            <div className="form-control mt-6">
+              <button onClick={handleGoogleLogin} className="btn btn-primary">
+                Login Using Google
+              </button>
+            </div>
           </form>
           <label className="label">
-            <Link to="/register" className="label-text-alt pl-8 pb-3 text-sm link link-hover">
+            <Link
+              to="/register"
+              className="label-text-alt pl-8 pb-3 text-sm link link-hover"
+            >
               New to Auth Master? Please Register
             </Link>
           </label>
